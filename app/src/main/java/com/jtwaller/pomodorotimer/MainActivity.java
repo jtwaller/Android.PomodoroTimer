@@ -12,6 +12,8 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    AlarmReceiver alarm = new AlarmReceiver();
+
     TextView timerTextView;
     long endTime;
     long timeRemaining = 1500000; // 25 minutes in ms
@@ -55,11 +57,15 @@ public class MainActivity extends AppCompatActivity {
                 Button b = (Button) v;
                 if (b.getText().equals(getString(R.string.button_stop))) {
                     timeRemaining = endTime - SystemClock.elapsedRealtime();
-                    timerHandler.removeCallbacks(timerRunnable);
+
+                    alarm.cancelAlarm();
+                    timerHandler.removeCallbacks(timerRunnable); //stop timer
                     b.setText(R.string.button_start);
                 } else {
                     endTime = SystemClock.elapsedRealtime() + timeRemaining;
-                    timerHandler.postDelayed(timerRunnable, 0);
+
+                    alarm.setAlarm(MainActivity.this, timeRemaining);
+                    timerHandler.postDelayed(timerRunnable, 0); //start timer
                     b.setText(R.string.button_stop);
                 }
             }
