@@ -15,12 +15,13 @@ public class AlarmEvent extends IntentService {
     protected void onHandleIntent(Intent intent) {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
-        // If no alarm has been set
+        // If no alarm ringtone has been set
         if(alarmSound == null){
             alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
         }
 
         Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alarmSound);
+        r.play();
         AlarmReceiver.completeWakefulIntent(intent);
     }
 }
