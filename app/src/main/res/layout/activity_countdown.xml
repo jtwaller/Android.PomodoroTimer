@@ -12,23 +12,20 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/title_text"
-        android:textSize="30dp"
-        android:id="@+id/titleText"
-        android:layout_marginTop="10dp"
+        android:id="@+id/timerTextView"
+        android:text="@string/initial_time"
+        android:textSize="60dp"
+        android:layout_marginTop="140dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:text="@string/main_start"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="@string/button_start"
         android:textSize="30dp"
         android:id="@+id/timerButton"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/titleText"
-        android:layout_centerHorizontal="true"
-        android:onClick="gotoCountdown" />
-
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/timerTextView"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
