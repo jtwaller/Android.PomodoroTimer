@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/alarmActivityTitle"
-        android:text="Turn that shit off pls"
+        android:text="Turn that off please"
         android:onClick="killAlarm" />
 
 </RelativeLayout>
