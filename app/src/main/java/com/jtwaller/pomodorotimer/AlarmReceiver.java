@@ -6,19 +6,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
 import android.widget.Toast;
 
 public class AlarmReceiver extends WakefulBroadcastReceiver {
+
+    private static final String TAG = "AlarmReceiver";
 
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "Alarm Received!", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Alarm Received!");
 
         Intent service = new Intent(context, AlarmService.class);
         startWakefulService(context, service);
+
+        Log.d(TAG, "Wakeful service started.  Context: " + context + " service: " + service);
 
         //Toast.makeText(context, "You are here.", Toast.LENGTH_SHORT).show();
     }
@@ -33,6 +38,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         alarmMgr.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                 SystemClock.elapsedRealtime() + timeRemaining, alarmIntent);
 
+        Log.d(TAG, "time remaining:" + timeRemaining);
         Toast.makeText(context, "Alarm set!", Toast.LENGTH_SHORT).show();
     }
 
