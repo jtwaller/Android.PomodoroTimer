@@ -16,11 +16,22 @@ public class AlarmService extends Service {
 
     private static final String TAG = "AlarmService";
 
-    boolean stopAlarmCheck = false;
     Thread alarmThread;
+
+    public AlarmService() {
+        super();
+        Log.d(TAG, "AlarmService constructor");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d(TAG, "Service created");
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
         Runnable r = new alarmRunnable(this);
         alarmThread = new Thread(r);
         alarmThread.start();
@@ -29,22 +40,34 @@ public class AlarmService extends Service {
         gotoAlarmActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         startActivity(gotoAlarmActivity);
+
+        Log.d(TAG, "onStartCommand");
+
+        /*
         while (alarmThread.isAlive()) {
-            try {
-                Log.d(TAG, "AlarmThread lives, sleeping 2 seconds...");
-                Thread.sleep(2000);
-            } catch(InterruptedException e) {}
+            // Are continuous loops bad practice for battery/performance?
+            Log.d(TAG, "AlarmThread lives, sleeping 2 seconds...");
 
-            if(stopAlarmCheck) {
-                alarmThread.interrupt();
-                alarmThread = null;
-            }
+//            try {
+//                This is bad.  Will sleep UI thread, consider putting while loop into new thread?
+//                Thread.sleep(2000);
+//            } catch(InterruptedException e) {}
         }
-
-        Log.d(TAG, "Alarm interrupted");
-        AlarmReceiver.completeWakefulIntent(intent);
+        */
 
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        alarmThread.interrupt();
+        alarmThread = null;
+        Log.d(TAG, "Alarm interrupted");
+
+        Intent intent = new Intent(this, AlarmService.class);
+        AlarmReceiver.completeWakefulIntent(intent);
+
+        super.onDestroy();
     }
 
     @Override
