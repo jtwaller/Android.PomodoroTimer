@@ -4,28 +4,30 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
 
 public class AlarmService extends Service {
 
     private static final String TAG = "AlarmService";
 
     Thread alarmThread;
-
-    public AlarmService() {
-        super();
-        Log.d(TAG, "AlarmService constructor");
-    }
+    MediaPlayer mMediaPlayer;
+    Uri alarmFile;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mMediaPlayer = new MediaPlayer();
+        alarmFile = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+
+        // If no alarm ringtone has been set
+        if(alarmFile == null){
+            alarmFile = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        }
+
         Log.d(TAG, "Service created");
     }
 
@@ -41,33 +43,26 @@ public class AlarmService extends Service {
 
         startActivity(gotoAlarmActivity);
 
-        Log.d(TAG, "onStartCommand");
-
-        /*
-        while (alarmThread.isAlive()) {
-            // Are continuous loops bad practice for battery/performance?
-            Log.d(TAG, "AlarmThread lives, sleeping 2 seconds...");
-
-//            try {
-//                This is bad.  Will sleep UI thread, consider putting while loop into new thread?
-//                Thread.sleep(2000);
-//            } catch(InterruptedException e) {}
-        }
-        */
+        Log.d(TAG, "onStartCommand, Tid: " + Thread.currentThread().getId());
+        Log.d(TAG, "onStartCommand, alarm Tid: " + alarmThread.getId());
 
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        alarmThread.interrupt();
-        alarmThread = null;
-        Log.d(TAG, "Alarm interrupted");
-
         Intent intent = new Intent(this, AlarmService.class);
         AlarmReceiver.completeWakefulIntent(intent);
 
+        Log.d(TAG, "onDestroy, Tid: " + Thread.currentThread().getId());
+        Log.d(TAG, "Alarm interrupted, Alarm Tid:" + alarmThread.getId());
+
+        mMediaPlayer.release();
+        alarmThread.interrupt();
+        alarmThread = null;
         super.onDestroy();
+
+        Log.d(TAG, "onDestroy end reached");
     }
 
     @Override
@@ -86,29 +81,13 @@ public class AlarmService extends Service {
 
         @Override
         public void run() {
-
-            //Ringtone alarmSound;
-            MediaPlayer mMediaPlayer = new MediaPlayer();
-
-            Uri alarmFile = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-
-            // If no alarm ringtone has been set
-            if(alarmFile == null){
-                alarmFile = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-            }
-
             try {
+                Log.d(TAG, "Runnable, Tid: " + Thread.currentThread().getId());
                 mMediaPlayer.setDataSource(threadContext, alarmFile);
                 mMediaPlayer.setLooping(true);
                 mMediaPlayer.prepare();
                 mMediaPlayer.start();
             } catch (Exception e) {}
-
-            // TODO: When interrupting & nulling alarmThread in onStartCommand,
-            // will this release the media player?
-
-            //alarmSound = RingtoneManager.getRingtone(getApplicationContext(), alarmFile);
-            //alarmSound.play();
         }
     }
 

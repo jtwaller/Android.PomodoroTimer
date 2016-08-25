@@ -13,14 +13,19 @@
         android:id="@+id/alarmActivityTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="We did it boys." />
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:text="You magnificent marvel of productivity." />
 
     <Button
         android:id="@+id/alarmOffButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/alarmActivityTitle"
-        android:text="Turn that off please"
-        android:onClick="killAlarm" />
+        android:layout_centerInParent="true"
+        android:text="Break time!!!"
+        android:gravity="center" />
 
 </RelativeLayout>

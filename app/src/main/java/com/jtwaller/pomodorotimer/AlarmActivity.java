@@ -20,6 +20,9 @@ public class AlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AlarmService.class);
                 stopService(intent);
+
+                Intent goToBreak = new Intent(getApplicationContext(), BreakActivity.class);
+                startActivity(goToBreak);
             }
 
         });
