@@ -7,12 +7,12 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.jtwaller.pomodorotimer.CountdownActivity">
+    tools:context="com.jtwaller.pomodorotimer.BreakActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/timerTextView"
+        android:id="@+id/breakTimerTextView"
         android:text="@string/initial_time"
         android:textSize="60dp"
         android:layout_marginTop="140dp"
@@ -24,8 +24,8 @@
         android:layout_height="wrap_content"
         android:text="@string/button_start"
         android:textSize="30dp"
-        android:id="@+id/timerButton"
+        android:id="@+id/breakTimerButton"
         android:layout_marginTop="40dp"
-        android:layout_below="@+id/timerTextView"
+        android:layout_below="@+id/breakTimerTextView"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
