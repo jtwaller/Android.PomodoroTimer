@@ -40,7 +40,7 @@ public class BreakActivity extends AppCompatActivity {
         final Button b = (Button) findViewById(R.id.breakTimerButton);
 
         // Text stuff
-        final CountDownTimer breakTimer = new CountDownTimer(5*1000, 1000) {
+        final CountDownTimer breakTimer = new CountDownTimer(5*60*1000, 1000) {
             @Override
             public void onTick(long l) {
                 minutes = (int) (l / 1000) / 60;
