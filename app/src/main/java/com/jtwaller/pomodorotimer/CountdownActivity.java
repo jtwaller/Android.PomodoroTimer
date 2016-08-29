@@ -50,7 +50,6 @@ public class CountdownActivity extends AppCompatActivity {
                 if (b.getText().equals(getString(R.string.button_stop))) {
                     // Record time remaining and kill handler
                     timeRemaining = endTime - SystemClock.elapsedRealtime();
-                    //timeRemaining = 10 * 1000;
 
                     alarm.cancelAlarm(CountdownActivity.this);
                     timerHandler.stop();
