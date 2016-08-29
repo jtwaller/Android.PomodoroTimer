@@ -21,6 +21,7 @@ public class CountdownActivity extends AppCompatActivity {
     static final String TAG = "CountdownActivity";
 
     AlarmReceiver alarm = new AlarmReceiver();
+    CountdownHandler timerHandler;
 
     TextView timerTextView;
     long endTime;
@@ -39,7 +40,7 @@ public class CountdownActivity extends AppCompatActivity {
         timerTextView = (TextView) findViewById(R.id.timerTextView);
         timerTextView.setText(String.format(Locale.ENGLISH, "%02d:%02d", minutes, seconds));
 
-        final CountdownHandler timerHandler = new CountdownHandler(timerTextView, timeRemaining);
+        timerHandler = new CountdownHandler(timerTextView, timeRemaining);
 
         final Button b = (Button) findViewById(R.id.timerButton);
         b.setText(getString(R.string.button_start));
@@ -49,22 +50,13 @@ public class CountdownActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Button b = (Button) v;
                 if (b.getText().equals(getString(R.string.button_stop))) {
-                    // Record time remaining and kill handler
-                    timeRemaining = endTime - SystemClock.elapsedRealtime();
-
-                    alarm.cancelAlarm(CountdownActivity.this);
-                    timerHandler.stop();
+                    stopCountdown();
                     b.setText(R.string.button_start);
                 } else {
-                    // Calculate end time and start the timer
-                    endTime = SystemClock.elapsedRealtime() + timeRemaining;
-
-                    alarm.setAlarm(CountdownActivity.this, timeRemaining);
-                    timerHandler.start(endTime);
+                    startCountdown();
                     b.setText(R.string.button_stop);
                 }
             }
-
         });
 
         Button cancelButton = (Button) findViewById(R.id.cancelButton);
@@ -78,18 +70,11 @@ public class CountdownActivity extends AppCompatActivity {
                 cancelAlert.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface di, int id) {
-                                SQLiteHelper mDbHelper = new SQLiteHelper(getApplicationContext());
-                                SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-                                ContentValues values = new ContentValues();
-                                values.put(SQLContract.PomoTable.COLUMN_NAME_DATE_CREATED,
-                                        (System.currentTimeMillis() - timeRemaining));
-                                values.put(SQLContract.PomoTable.COLUMN_NAME_COMPLETED, false);
-
-                                db.insert(SQLContract.PomoTable.TABLE_NAME, null, values);
-
-                                timeRemaining = 25*60*1000;
-                                b.setText("25:00");  // TODO: Make a reset function
+                                if(b.getText().equals("STOP")) { // Timer is running
+                                    stopCountdown();
+                                    b.setText(R.string.button_start);
+                                }
+                                cancelPomo();
                                 di.cancel();
                             }
                         });
@@ -103,5 +88,37 @@ public class CountdownActivity extends AppCompatActivity {
                 cancelAlert.create().show();
             }
         });
+    }
+
+    private void startCountdown() {
+        // Calculate end time and start the timer
+        endTime = SystemClock.elapsedRealtime() + timeRemaining;
+
+        alarm.setAlarm(CountdownActivity.this, timeRemaining);
+        timerHandler.start(endTime);
+    }
+
+    private void stopCountdown() {
+        // Record time remaining and kill handler
+        timeRemaining = endTime - SystemClock.elapsedRealtime();
+
+        alarm.cancelAlarm(CountdownActivity.this);
+        timerHandler.stop();
+    }
+
+
+    private void cancelPomo() {
+        SQLiteHelper mDbHelper = new SQLiteHelper(getApplicationContext());
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(SQLContract.PomoTable.COLUMN_NAME_DATE_CREATED,
+                (System.currentTimeMillis() - timeRemaining));
+        values.put(SQLContract.PomoTable.COLUMN_NAME_COMPLETED, false);
+
+        db.insert(SQLContract.PomoTable.TABLE_NAME, null, values);
+
+        timeRemaining = 25*60*1000;
+        timerTextView.setText("25:00");
     }
 }

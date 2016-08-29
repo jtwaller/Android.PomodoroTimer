@@ -27,6 +27,7 @@ public class BreakActivity extends AppCompatActivity {
     static final String TAG = "BreakActivity";
 
     TextView timerTextView;
+    CountDownTimer breakTimer;
 
     int minutes;
     int seconds;
@@ -40,7 +41,7 @@ public class BreakActivity extends AppCompatActivity {
         final Button b = (Button) findViewById(R.id.breakTimerButton);
 
         // Text stuff
-        final CountDownTimer breakTimer = new CountDownTimer(5*60*1000, 1000) {
+        breakTimer = new CountDownTimer(5*60*1000, 1000) {
             @Override
             public void onTick(long l) {
                 minutes = (int) (l / 1000) / 60;
@@ -70,8 +71,15 @@ public class BreakActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 breakTimer.cancel();
-                startActivity(new Intent(getBaseContext(), CountdownActivity.class));
+                startActivity(new Intent(getApplicationContext(), CountdownActivity.class));
             }
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        breakTimer.cancel();
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
     }
 }

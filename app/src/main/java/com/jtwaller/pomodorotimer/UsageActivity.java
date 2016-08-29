@@ -27,17 +27,18 @@ public class UsageActivity extends AppCompatActivity {
 
         c.moveToFirst();
         while(!c.isAfterLast()) {
-            for(int i = 0; i < c.getColumnCount(); i++) {
-                if(i == 1) { // date column  TODO: refactor this nonsense
-                    DateFormat df = DateFormat.getDateTimeInstance();
-                    Date date = new Date(c.getLong(i));
-                    sb.append(df.format(date)).append(" ");
-                } else {
-                    sb.append(c.getString(i)).append(" ");
-                }
-            }
-            c.moveToNext();
+            // TODO: Refactor this nonsense
+            // 0 = id; 1 = date in int; 2 = boolean for completed or not
+            sb.append(c.getString(0)).append(" ");
+
+            DateFormat df = DateFormat.getDateTimeInstance();
+            Date date = new Date(c.getLong(1));
+
+            sb.append(df.format(date)).append(" ");
+            sb.append((c.getString(2).equals("1")) ? "Complete" : "Incomplete");
+
             sb.append(System.lineSeparator());
+            c.moveToNext();
         }
         c.close();
         dbUsage.setText(sb);

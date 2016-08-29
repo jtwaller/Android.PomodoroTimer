@@ -27,8 +27,13 @@ public class AlarmActivity extends AppCompatActivity {
 
         });
 
+    }
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
 
-
+        stopService(new Intent(getApplicationContext(), AlarmService.class));
+        startActivity(new Intent(getApplicationContext(), BreakActivity.class));
     }
 
 }
