@@ -8,7 +8,7 @@ public class SQLContract {
     }
 
     public static final String DATABASE_NAME = "pomo.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     public static abstract class PomoTable implements BaseColumns {
         public static final String TABLE_NAME = "PomoTable";
@@ -18,7 +18,7 @@ public class SQLContract {
         public static final String TABLE_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY," +
-                        COLUMN_NAME_DATE_CREATED + " TEXT, " +
+                        COLUMN_NAME_DATE_CREATED + " INT, " +
                         COLUMN_NAME_COMPLETED + " BOOLEAN"
                         + ");";
 

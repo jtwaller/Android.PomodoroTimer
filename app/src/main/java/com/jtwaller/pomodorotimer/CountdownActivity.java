@@ -1,11 +1,12 @@
 package com.jtwaller.pomodorotimer;
 
-import android.content.Intent;
-import android.os.Handler;
+import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.SystemClock;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ public class CountdownActivity extends AppCompatActivity {
 
     TextView timerTextView;
     long endTime;
-    long timeRemaining = 5 * 1000; // 25 minutes in ms
+    long timeRemaining = 25*60*1000; // 25 minutes in ms
     int minutes;
     int seconds;
 
@@ -40,7 +41,7 @@ public class CountdownActivity extends AppCompatActivity {
 
         final CountdownHandler timerHandler = new CountdownHandler(timerTextView, timeRemaining);
 
-        Button b = (Button) findViewById(R.id.timerButton);
+        final Button b = (Button) findViewById(R.id.timerButton);
         b.setText(getString(R.string.button_start));
         b.setOnClickListener(new View.OnClickListener() {
 
@@ -64,6 +65,43 @@ public class CountdownActivity extends AppCompatActivity {
                 }
             }
 
+        });
+
+        Button cancelButton = (Button) findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder cancelAlert = new AlertDialog.Builder(CountdownActivity.this);
+                cancelAlert.setMessage("Cancel timer and reset?");
+                cancelAlert.setCancelable(true);
+
+                cancelAlert.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface di, int id) {
+                                SQLiteHelper mDbHelper = new SQLiteHelper(getApplicationContext());
+                                SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+                                ContentValues values = new ContentValues();
+                                values.put(SQLContract.PomoTable.COLUMN_NAME_DATE_CREATED,
+                                        (System.currentTimeMillis() - timeRemaining));
+                                values.put(SQLContract.PomoTable.COLUMN_NAME_COMPLETED, false);
+
+                                db.insert(SQLContract.PomoTable.TABLE_NAME, null, values);
+
+                                timeRemaining = 25*60*1000;
+                                b.setText("25:00");  // TODO: Make a reset function
+                                di.cancel();
+                            }
+                        });
+
+                cancelAlert.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface di, int id) {
+                                di.cancel();
+                            }
+                        });
+                cancelAlert.create().show();
+            }
         });
     }
 }

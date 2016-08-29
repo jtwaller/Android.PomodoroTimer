@@ -25,7 +25,8 @@
         <service android:name=".AlarmService" />
 
         <activity android:name=".BreakActivity" />
-        <activity android:name=".dbTest"></activity>
+        <activity android:name=".dbTest" />
+        <activity android:name=".UsageActivity"></activity>
     </application>
 
 </manifest>

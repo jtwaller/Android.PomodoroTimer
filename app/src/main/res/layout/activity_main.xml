@@ -34,11 +34,22 @@
     <Button
         android:layout_width="300dp"
         android:layout_height="60dp"
+        android:text="Usage History"
+        android:textSize="30dp"
+        android:id="@+id/usageButton"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/timerButton"
+        android:layout_centerHorizontal="true"
+        android:onClick="gotoUsage" />
+
+    <Button
+        android:layout_width="300dp"
+        android:layout_height="60dp"
         android:text="dbTest"
         android:textSize="30dp"
         android:id="@+id/dbTest"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/timerButton"
+        android:layout_below="@+id/usageButton"
         android:layout_centerHorizontal="true"
         android:onClick="dbTest" />
 

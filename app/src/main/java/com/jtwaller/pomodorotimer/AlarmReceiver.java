@@ -3,8 +3,10 @@ package com.jtwaller.pomodorotimer;
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.SystemClock;
 import android.support.v4.content.WakefulBroadcastReceiver;
@@ -27,7 +29,16 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
         Log.d(TAG, "Wakeful service started.  Context: " + context + " service: " + service);
 
-        //Toast.makeText(context, "You are here.", Toast.LENGTH_SHORT).show();
+        // If Alarm is received, that means pomo was completed successfully.
+        SQLiteHelper mDbHelper = new SQLiteHelper(context);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(SQLContract.PomoTable.COLUMN_NAME_DATE_CREATED,
+                (System.currentTimeMillis() - 25*60*1000));
+        values.put(SQLContract.PomoTable.COLUMN_NAME_COMPLETED, true);
+
+        db.insert(SQLContract.PomoTable.TABLE_NAME, null, values);
     }
 
     @TargetApi(19)

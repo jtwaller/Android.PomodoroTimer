@@ -18,9 +18,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void gotoUsage(View view) {
+        Intent intent = new Intent(this, UsageActivity.class);
+        startActivity(intent);
+    }
+
     public void dbTest(View view) {
         Intent intent = new Intent(this, dbTest.class);
         startActivity(intent);
     }
+
+    // TODO: Set onBack button to go to homepage when it makes sense.
 
 }
