@@ -16,19 +16,19 @@ public class CountdownHandler extends Handler {
     int seconds;
     int minutes;
 
-    public CountdownHandler(TextView textView, long endTime) {
+    public CountdownHandler(TextView textView) {
         super();
         this.textView = textView;
-        this.endTime = endTime;
 
         r = new TimerRunnable();
     }
 
-    public void start(long endTime) {
+    public void start(long timeRemaining) {
+        endTime = timeRemaining + SystemClock.elapsedRealtime();
         this.post(r);
-        this.endTime = endTime;
     }
 
+    // returns timeRemaining
     public void stop() {
         this.removeCallbacks(r);
     }

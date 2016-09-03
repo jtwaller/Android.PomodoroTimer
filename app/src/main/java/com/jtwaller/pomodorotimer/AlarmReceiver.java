@@ -25,6 +25,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Log.d(TAG, "Alarm Received!");
 
         Intent service = new Intent(context, AlarmService.class);
+        service.putExtra("serviceIntent", "soundAlarm");
         startWakefulService(context, service);
 
         Log.d(TAG, "Wakeful service started.  Context: " + context + " service: " + service);
@@ -57,7 +58,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
                     SystemClock.elapsedRealtime() + timeRemaining, alarmIntent);
         }
 
-        Log.d(TAG, "time remaining:" + timeRemaining);
+        Log.d(TAG, "Alarm set.  Time remaining:" + timeRemaining);
         Toast.makeText(context, "Alarm set!", Toast.LENGTH_SHORT).show();
     }
 
@@ -67,4 +68,5 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             alarmMgr.cancel(alarmIntent);
         }
     }
+
 }
